@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Predict data science salaries using Machine Learning. Get instant salary estimates based on experience, job title, location, and more.">
+    <title>Salary Predictor — ML-Powered Salary Estimation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <!-- Animated background orbs -->
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <main class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+            </div>
+            <h1 class="header__title">Salary Predictor</h1>
+            <p class="header__subtitle">ML-powered salary estimation for data science roles</p>
+        </header>
+
+        <!-- Prediction Form -->
+        <section class="card" id="prediction-form-card">
+            <h2 class="card__title">Enter Job Details</h2>
+            <form id="prediction-form" autocomplete="off">
+                <div class="form-grid">
+                    <!-- Row 1 -->
+                    <div class="form-group" id="fg-work-year">
+                        <label for="work_year">Work Year</label>
+                        <select id="work_year" name="work_year" required>
+                            <option value="" disabled selected>Select year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-experience-level">
+                        <label for="experience_level">Experience Level</label>
+                        <select id="experience_level" name="experience_level" required>
+                            <option value="" disabled selected>Select level</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-employment-type">
+                        <label for="employment_type">Employment Type</label>
+                        <select id="employment_type" name="employment_type" required>
+                            <option value="" disabled selected>Select type</option>
+                        </select>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="form-group form-group--wide" id="fg-job-title">
+                        <label for="job_title">Job Title</label>
+                        <select id="job_title" name="job_title" required>
+                            <option value="" disabled selected>Select job title</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-salary">
+                        <label for="salary">Salary (Original Currency)</label>
+                        <input type="number" id="salary" name="salary" placeholder="e.g. 175000" required min="0">
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="form-group" id="fg-salary-currency">
+                        <label for="salary_currency">Salary Currency</label>
+                        <select id="salary_currency" name="salary_currency" required>
+                            <option value="" disabled selected>Select currency</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-employee-residence">
+                        <label for="employee_residence">Employee Residence</label>
+                        <select id="employee_residence" name="employee_residence" required>
+                            <option value="" disabled selected>Select country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-remote-ratio">
+                        <label for="remote_ratio">Remote Ratio</label>
+                        <select id="remote_ratio" name="remote_ratio" required>
+                            <option value="" disabled selected>Select ratio</option>
+                        </select>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="form-group" id="fg-company-location">
+                        <label for="company_location">Company Location</label>
+                        <select id="company_location" name="company_location" required>
+                            <option value="" disabled selected>Select location</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="fg-company-size">
+                        <label for="company_size">Company Size</label>
+                        <select id="company_size" name="company_size" required>
+                            <option value="" disabled selected>Select size</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn--primary" id="predict-btn">
+                    <span class="btn__text">Predict Salary</span>
+                    <span class="btn__loader" hidden>
+                        <span class="spinner"></span>
+                    </span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results" id="results-section" hidden>
+            <h2 class="card__title results__heading">Prediction Results</h2>
+
+            <div class="results-grid">
+                <!-- Predicted Salary -->
+                <div class="result-card result-card--primary" id="result-regression">
+                    <div class="result-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <p class="result-card__label">Predicted Salary (USD)</p>
+                    <p class="result-card__value" id="predicted-salary">—</p>
+                    <p class="result-card__meta" id="regression-meta">Linear Regression</p>
+                </div>
+
+                <!-- KNN Classification -->
+                <div class="result-card" id="result-knn">
+                    <div class="result-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <p class="result-card__label">KNN Classification</p>
+                    <p class="result-card__value" id="knn-result">—</p>
+                    <p class="result-card__meta" id="knn-meta">Accuracy: —</p>
+                </div>
+
+                <!-- SVM Classification -->
+                <div class="result-card" id="result-svm">
+                    <div class="result-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <p class="result-card__label">SVM Classification</p>
+                    <p class="result-card__value" id="svm-result">—</p>
+                    <p class="result-card__meta" id="svm-meta">Accuracy: —</p>
+                </div>
+            </div>
+
+            <!-- Median reference -->
+            <div class="median-bar" id="median-bar">
+                <p>Dataset Median Salary: <strong id="median-value">—</strong></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with Flask &amp; scikit-learn &middot; Powered by <a href="https://github.com/Pranjal11246/SalaryPredictor_and_Classifier" target="_blank" rel="noopener">Salary Predictor ML</a></p>
+        </footer>
+    </main>
+
+    <!-- Error toast -->
+    <div class="toast" id="error-toast" hidden>
+        <p id="error-message">Something went wrong.</p>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
